@@ -5,14 +5,14 @@
     <title>Walk 2020</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
     <script src='./polyline.js'></script>
-    <script src="https://psedge-strava.s3.eu-north-1.amazonaws.com/data.js"></script>
+    <script src="https://psedge-strava.s3.eu-north-1.amazonaws.com/data-2.js"></script>
     <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
     <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet'/>
     <style>
-        body { margin:0; padding:0; font-family: Roboto, sans-serif; overflow-x: hidden }
+        body { margin:0; padding:0; font-family: Roboto, sans-serif; overflow-x: hidden; width: 100% }
         #map { position:absolute; top:0; bottom:0; width:100%; }
-        #title { position: absolute; top: 20px; left: 20px; height: 10%; width: 100%; background: transparent; color: #fafafa; min-width: 200px; }
-        #info { position: absolute; top: 100px; left: 20px; height: 75%; width: 45%; background: transparent; color: #fafafa; max-width: 200px; }
+        #title { position: absolute; top: 10px; right: 20px; height: 10%; background: transparent; color: #09063a; min-width: 200px; }
+        #info { position: absolute; top: 10px; left: 20px; height: 75%; width: 45%; background: transparent; color: #09063a; max-width: 200px; }
         #info h1 { font-size: 2.5em; opacity: 0.8; }
         #info h2 { font-size: 1.2em; opacity: 0.6; }
     </style>
@@ -20,34 +20,50 @@
 
 <div id='map'></div>
 <div id='title'>
-    <h1>2020: <span id="total">0km</span></h1>
+    <h1 style="color: #297996">2020: <span id="total-2020">1278.78km</span></h1>
+    <h1 style="color: #43156d">2021: <span id="total-2021">0km</span></h1>
 </div>
 <div id='info'></div>
 <script>
-let zoom = 12
+let zoom = 11
 let center = [59.287630320343276, 18.03937911987305]
 if (window.innerWidth < 960) {
-    zoom = 10
+    zoom = 9
     center = [59.24429260940369, 17.89432525634766]
 }
 
-// Set up Mapbox with S3 polys
 L.mapbox.accessToken = 'pk.eyJ1IjoicGV0ZXJzZWRnZXdpY2siLCJhIjoieEJFeDlLMCJ9.T3YCoB-ZezQsWUA4Q7NaGg';
 let map = L.mapbox.map('map', null, { zoomControl:false })
     .setView(center, zoom)
-    .addLayer(L.mapbox.styleLayer('mapbox://styles/petersedgewick/ckajtv5fn0ypf1iqmmutg55on'));
-for (line in data['lines']) {
-    L.polyline(polyline.decode(data['lines'][line]), {color: '#24E0C5'}).addTo(map);
+    .addLayer(L.mapbox.styleLayer('mapbox://styles/petersedgewick/ckjfz8u6dnozf19rpqw6y9ai5'));
+
+let opa = 0.4;
+colours = {
+    2020: "#297996",
+    2021: "#43156d",
+}
+
+var d = new Date();
+for (var year in data) {
+    if (year == d.getFullYear()) {
+        opa = 1
+    }
+    for (var line in data[year]['lines']) {
+        opa = 0.4
+        var line = L.polyline(polyline.decode(data[year]['lines'][line]), {color: colours[year], opacity: opa, stroke: 0.1})
+        line.addTo(map);
+    }
 }
 
 // Populate side panel
-document.getElementById('total').innerHTML = data['total'] + 'km'
+document.getElementById('total-2020').innerHTML = Math.round(data['2020']['distance']/1000)+ 'km'
+document.getElementById('total-2021').innerHTML = Math.round(data['2021']['distance']/1000) + 'km'
 let months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 let i = 1
 for (month in months) {
     let el = document.createElement('h2')
-    el.innerHTML = '<h2>' + months[month] + ': <span id="' + months[month] + '">' + data['months'][i] + 'km</span></h2>'
-    el.style.opacity = 0.3 + data['months'][i]*2/data['total']
+    el.innerHTML = '<h2>' + months[month] + ': <span id="' + months[month] + '">' + data['2021']['months'][i.toString()] + 'km</span></h2>'
+    el.style.opacity = 0.3 + data['2021']['months'][i]*2/data['2021']['distance']
     document.getElementById("info").appendChild(el)
     i++
 }
