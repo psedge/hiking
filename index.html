@@ -39,7 +39,7 @@ let map = L.mapbox.map('map', null, { zoomControl:false })
 
 let opa = 0.4;
 colours = {
-    2020: "#297996",
+    2020: "#a5c3cd",
     2021: "#43156d",
 }
 
@@ -49,7 +49,7 @@ for (var year in data) {
         opa = 1
     }
     for (var line in data[year]['lines']) {
-        opa = 0.4
+        opa = 0.9
         var line = L.polyline(polyline.decode(data[year]['lines'][line]), {color: colours[year], opacity: opa, stroke: 0.1})
         line.addTo(map);
     }
