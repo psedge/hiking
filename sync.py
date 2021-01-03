@@ -63,7 +63,7 @@ def lambda_handler(event, context):
             years[year]['lines'].append(activity['map']['summary_polyline'])
 
     total_distance = sum([year_body['distance'] for year_body in years.values()])/1000
-    filtered_years = {year: years[year] for year in years if (years[year]['distance'] != 0 or year != str(datetime.now().year))}
+    filtered_years = {year: years[year] for year in years if (years[year]['distance'] != 0 or year == str(datetime.now().year))}
     body = "data =" + json.dumps(filtered_years)
 
     response = s3.put_object(
