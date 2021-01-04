@@ -9,12 +9,51 @@
     <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
     <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet'/>
     <style>
-        body { margin:0; padding:0; font-family: Roboto, sans-serif; overflow-x: hidden; width: 100% }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
-        #title { position: absolute; top: 10px; right: 20px; height: 10%; background: transparent; color: #09063a; min-width: 200px; }
-        #info { position: absolute; top: 10px; left: 20px; height: 75%; width: 45%; background: transparent; color: #09063a; max-width: 200px; }
-        #info h1 { font-size: 2.5em; opacity: 0.8; }
-        #info h2 { font-size: 1.2em; opacity: 0.6; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Roboto, sans-serif;
+            overflow-x: hidden;
+            width: 100%
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #title {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            height: 10%;
+            background: transparent;
+            color: #09063a;
+            min-width: 200px;
+        }
+
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            height: 75%;
+            width: 45%;
+            background: transparent;
+            color: #09063a;
+            max-width: 200px;
+        }
+
+        #info h1 {
+            font-size: 2.5em;
+            opacity: 0.8;
+        }
+
+        #info h2 {
+            font-size: 1.2em;
+            opacity: 0.6;
+        }
     </style>
 </head>
 
@@ -25,47 +64,52 @@
 </div>
 <div id='info'></div>
 <script>
-let zoom = 11
-let center = [59.287630320343276, 18.03937911987305]
-if (window.innerWidth < 960) {
-    zoom = 9
-    center = [59.24429260940369, 17.89432525634766]
-}
-
-L.mapbox.accessToken = 'pk.eyJ1IjoicGV0ZXJzZWRnZXdpY2siLCJhIjoieEJFeDlLMCJ9.T3YCoB-ZezQsWUA4Q7NaGg';
-let map = L.mapbox.map('map', null, { zoomControl:false })
-    .setView(center, zoom)
-    .addLayer(L.mapbox.styleLayer('mapbox://styles/petersedgewick/ckjfz8u6dnozf19rpqw6y9ai5'));
-
-let opa = 0.4;
-colours = {
-    2020: "#a5c3cd",
-    2021: "#43156d",
-}
-
-var d = new Date();
-for (var year in data) {
-    if (year == d.getFullYear()) {
-        opa = 1
+    let zoom = 11
+    let center = [59.287630320343276, 18.03937911987305]
+    if (window.innerWidth < 960) {
+        zoom = 9
+        center = [59.24429260940369, 17.89432525634766]
     }
-    for (var line in data[year]['lines']) {
-        opa = 0.9
-        var line = L.polyline(polyline.decode(data[year]['lines'][line]), {color: colours[year], opacity: opa, stroke: 0.1})
-        line.addTo(map);
-    }
-}
 
-// Populate side panel
-document.getElementById('total-2020').innerHTML = Math.round(data['2020']['distance']/1000)+ 'km'
-document.getElementById('total-2021').innerHTML = Math.round(data['2021']['distance']/1000) + 'km'
-let months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
-let i = 1
-for (month in months) {
-    let el = document.createElement('h2')
-    el.innerHTML = '<h2>' + months[month] + ': <span id="' + months[month] + '">' + data['2021']['months'][i.toString()] + 'km</span></h2>'
-    el.style.opacity = 0.3 + data['2021']['months'][i]*2/data['2021']['distance']
-    document.getElementById("info").appendChild(el)
-    i++
-}
+    L.mapbox.accessToken = 'pk.eyJ1IjoicGV0ZXJzZWRnZXdpY2siLCJhIjoieEJFeDlLMCJ9.T3YCoB-ZezQsWUA4Q7NaGg';
+    let map = L.mapbox.map('map', null, {zoomControl: false})
+        .setView(center, zoom)
+        .addLayer(L.mapbox.styleLayer('mapbox://styles/petersedgewick/ckjfz8u6dnozf19rpqw6y9ai5'));
+
+    let opa = 0.4;
+    colours = {
+        2020: "#a5c3cd",
+        2021: "#43156d",
+    }
+
+    var d = new Date();
+    for (var year in data) {
+        if (year == d.getFullYear()) {
+            opa = 1
+        }
+        for (var line in data[year]['lines']) {
+            opa = 0.9
+            var line = L.polyline(polyline.decode(data[year]['lines'][line]), {
+                color: colours[year],
+                opacity: opa,
+                stroke: 0.1,
+                lineWidth: 0.1
+            })
+            line.addTo(map);
+        }
+    }
+
+    // Populate side panel
+    document.getElementById('total-2020').innerHTML = Math.round(data['2020']['distance'] / 1000) + 'km'
+    document.getElementById('total-2021').innerHTML = Math.round(data['2021']['distance'] / 1000) + 'km'
+    let months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+    let i = 1
+    for (month in months) {
+        let el = document.createElement('h2')
+        el.innerHTML = '<h2>' + months[month] + ': <span id="' + months[month] + '">' + data['2021']['months'][i.toString()] + 'km</span></h2>'
+        el.style.opacity = 0.3 + data['2021']['months'][i] * 2 / data['2021']['distance']
+        document.getElementById("info").appendChild(el)
+        i++
+    }
 </script>
 <body>
