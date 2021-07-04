@@ -12,7 +12,7 @@ client_id = os.environ['CLIENT_ID']
 client_secret = os.environ['CLIENT_SECRET']
 
 
-def lambda_handler(event, context):
+def lambda_handler(event, context) -> dict:
     """
     Handle cron invocation
     :param event:
@@ -79,7 +79,7 @@ def lambda_handler(event, context):
     }
 
 
-def refresh(refresh_token):
+def refresh(refresh_token) -> (str, str):
     """
     Exchange the refresh token for an access token
     :param refresh_token:
@@ -102,20 +102,29 @@ def refresh(refresh_token):
     return contents['access_token'], contents['refresh_token']
 
 
-def get_activities(access_token):
+def get_activities(access_token) -> list:
     """
     List the activities for this athlete
     :param access_token:
     :return:
     """
-    conn = http.client.HTTPSConnection("www.strava.com")
-    conn.request("GET", "/api/v3/athlete/activities?per_page=100", headers={
-        'Authorization': 'Bearer ' + access_token
-    })
+    contents = {}
 
-    res = conn.getresponse()
-    body = res.read()
-    if res.status != 200:
-        raise Exception(body)
-    contents = json.loads(body.decode("utf-8"))
+    page = 1
+    page_results = 1
+    while page_results > 0:
+        conn = http.client.HTTPSConnection("www.strava.com")
+        conn.request("GET", f"/api/v3/athlete/activities?per_page=100&page={page}", headers={
+            'Authorization': 'Bearer ' + access_token
+        })
+        res = conn.getresponse()
+        body = res.read()
+        if res.status != 200:
+            raise Exception(body)
+
+        page_content = json.loads(body.decode("utf-8"))
+        contents = contents + page_content
+        page_results = len(page_content)
+        page += 1
+
     return contents
