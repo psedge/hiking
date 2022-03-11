@@ -109,7 +109,7 @@
     let i = 1
     for (month in months) {
         let el = document.createElement('h2')
-        el.innerHTML = '<h2>' + months[month] + ': <span id="' + months[month] + '">' + data['2021']['months'][i.toString()] + 'km</span></h2>'
+        el.innerHTML = '<h2>' + months[month] + ': <span id="' + months[month] + '">' + data['2022']['months'][i.toString()] + 'km</span></h2>'
         el.style.opacity = 0.3 + data['2022']['months'][i] * 2 / data['2022']['distance']
         document.getElementById("info").appendChild(el)
         i++
