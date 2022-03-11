@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Walk 2020</title>
+    <title>Walk 2022</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
     <script src='./polyline.js'></script>
     <script src="https://psedge-strava.s3.eu-north-1.amazonaws.com/data-2.js"></script>
@@ -60,7 +60,8 @@
 <div id='map'></div>
 <div id='title'>
     <h1 style="color: #393939">2020: <span id="total-2020">1278.78km</span></h1>
-    <h1 style="color: #020000">2021: <span id="total-2021">0km</span></h1>
+    <h1 style="color: #020000">2021: <span id="total-2021">976km</span></h1>
+    <h1 style="color: #020000">2022: <span id="total-2022">0km</span></h1>
 </div>
 <div id='info'></div>
 <script>
@@ -78,8 +79,9 @@
 
     let opa = 0.4;
     colours = {
-        2020: "#393939",
-        2021: "#020000",
+        2020: "#898989",
+        2021: "#393939",
+        2022: "#020000",
     }
 
     var d = new Date();
@@ -102,12 +104,13 @@
     // Populate side panel
     document.getElementById('total-2020').innerHTML = Math.round(data['2020']['distance'] / 1000) + 'km'
     document.getElementById('total-2021').innerHTML = Math.round(data['2021']['distance'] / 1000) + 'km'
+    document.getElementById('total-2022').innerHTML = Math.round(data['2022']['distance'] / 1000) + 'km'
     let months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
     let i = 1
     for (month in months) {
         let el = document.createElement('h2')
         el.innerHTML = '<h2>' + months[month] + ': <span id="' + months[month] + '">' + data['2021']['months'][i.toString()] + 'km</span></h2>'
-        el.style.opacity = 0.3 + data['2021']['months'][i] * 2 / data['2021']['distance']
+        el.style.opacity = 0.3 + data['2022']['months'][i] * 2 / data['2022']['distance']
         document.getElementById("info").appendChild(el)
         i++
     }
