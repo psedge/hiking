@@ -30,7 +30,7 @@
             right: 20px;
             height: 10%;
             background: transparent;
-            color: #09063a;
+            color: #fafafa;
             min-width: 200px;
         }
 
@@ -41,7 +41,7 @@
             height: 75%;
             width: 45%;
             background: transparent;
-            color: #09063a;
+            color: #fafafa;
             max-width: 200px;
         }
 
@@ -59,9 +59,9 @@
 
 <div id='map'></div>
 <div id='title'>
-    <h1 style="color: #393939">2020: <span id="total-2020">1278.78km</span></h1>
-    <h1 style="color: #020000">2021: <span id="total-2021">976km</span></h1>
-    <h1 style="color: #020000">2022: <span id="total-2022">0km</span></h1>
+    <h1 style="color: #a0a0a0">2020: <span id="total-2020">1278.78km</span></h1>
+    <h1 style="color: #c0c0c0">2021: <span id="total-2021">976km</span></h1>
+    <h1 style="color: #fafafa">2022: <span id="total-2022">0km</span></h1>
 </div>
 <div id='info'></div>
 <script>
@@ -79,8 +79,8 @@
 
     let opa = 0.4;
     colours = {
-        2020: "#808080",
-        2021: "#a0a0a0",
+        2020: "#a0a0a0",
+        2021: "#c0c0c0",
         2022: "#fafafa",
     }
 
@@ -94,8 +94,8 @@
             var line = L.polyline(polyline.decode(data[year]['lines'][line]), {
                 color: colours[year],
                 opacity: opa,
-                stroke: 0.05,
-                lineWidth: 0.05
+                stroke: 0.03,
+                lineWidth: 0.03
             })
             line.addTo(map);
         }
